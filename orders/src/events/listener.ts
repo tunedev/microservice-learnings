@@ -6,6 +6,7 @@ import {
   TicketUpdatedEvent,
   OrderStatus,
   ExpirationCompleteEvent,
+  PaymentCreatedEvent,
 } from '@tunedev_tickets/common';
 import { OrderCancelledPublisher } from './publisher';
 
@@ -101,5 +102,24 @@ export class ExpirationCompleteListener extends Listener<ExpirationCompleteEvent
     } catch (error) {
       throw new Error(error.message);
     }
+  }
+}
+
+export class PaymentCompletedListener extends Listener<PaymentCreatedEvent> {
+  readonly subject = Subjects.PaymentCreated;
+
+  queueGroupName = queueGroupName;
+
+  async onMessage(data: PaymentCreatedEvent['data'], msg: Message) {
+    const order = await Order.findById(data.orderId);
+
+    if (!order) {
+      throw new Error('Order not found');
+    }
+
+    order.set({ status: OrderStatus.Complete });
+    await order.save();
+
+    msg.ack();
   }
 }

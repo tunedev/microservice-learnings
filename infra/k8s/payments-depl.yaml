@@ -27,9 +27,10 @@ spec:
             - name: MONGO_URI
               value: 'mongodb://payments-mongo-srv:27017/payments'
             - name: STRIPE_SECRET_KEY
-              secretKeyRef:
-                name: stripe-secret
-                key: STRIPE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-secret
+                  key: STRIPE_SECRET_KEY
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:

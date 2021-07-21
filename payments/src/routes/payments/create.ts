@@ -8,8 +8,10 @@ import {
   UnprocessableRequest,
 } from '@tunedev_tickets/common';
 import { stripe } from '../../stripe';
+import { natsWrapper } from '../../nats-wrapper';
+import { PaymentCreatedPublisher } from '../../events';
 
-import { Order } from '../../model';
+import { Order, Payment } from '../../model';
 
 const router = Router();
 
@@ -44,6 +46,18 @@ router.post(
     };
 
     const chargeResponse = await stripe.charges.create(chargesData);
+
+    const payment = Payment.build({
+      orderId,
+      stripeId: chargeResponse.id,
+    });
+    await payment.save();
+
+    new PaymentCreatedPublisher(natsWrapper.client).publish({
+      id: payment.id,
+      orderId: payment.orderId,
+      stripeId: payment.stripeId,
+    });
 
     res.status(201).json({ status: 'success' });
   }

@@ -5,6 +5,7 @@ import {
   TicketCreatedListener,
   TicketUpdatedListener,
   ExpirationCompleteListener,
+  PaymentCompletedListener,
 } from './events';
 import { app } from './app';
 
@@ -42,6 +43,7 @@ const start = async () => {
     new TicketUpdatedListener(natsWrapper.client).listen();
     new TicketCreatedListener(natsWrapper.client).listen();
     new ExpirationCompleteListener(natsWrapper.client).listen();
+    new PaymentCompletedListener(natsWrapper.client).listen();
 
     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
