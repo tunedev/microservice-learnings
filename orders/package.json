@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll --no-cache",
+    "test": "jest",
+    "test:watch": "jest --watchAll --no-cache",
     "start": "ts-node-dev --rs src/index.ts"
   },
   "jest": {
