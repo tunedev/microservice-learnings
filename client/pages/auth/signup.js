@@ -11,14 +11,13 @@ const Signup = () => {
     body: { email, password },
     onSuccess: () => Router.push('/'),
   });
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const response = await doRequest();
+    console.log({ response });
+  };
   return (
-    <form
-      onSubmit={async (event) => {
-        event.preventDefault();
-        const response = await doRequest();
-        console.log({ response });
-      }}
-    >
+    <form onSubmit={handleSubmit}>
       <h1>Sign up</h1>
       <div className='form-group'>
         <label htmlFor='email'>Email Address</label>

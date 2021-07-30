@@ -133,7 +133,7 @@ it('should successfully unreserve a ticket', async () => {
 
   const updatedTicket = await Ticket.findById(seedTicketData.id);
 
-  expect(updatedTicket!.orderId).toBe(null);
+  expect(updatedTicket!.orderId).not.toBeDefined();
 });
 
 it('acks OrderCancelled Event after processing', async () => {

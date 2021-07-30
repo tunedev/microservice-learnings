@@ -1,23 +1,40 @@
-import createAxios from '../api/build-client';
+import Link from 'next/link';
 
-const Landing = ({ currentUser }) => {
-  console.log({ currentUser });
-  return currentUser ? (
+const Landing = ({ currentUser, tickets }) => {
+  console.log({ currentUser, tickets });
+  const ticketList = tickets.data.map((ticket) => (
+    <tr key={ticket.id}>
+      <td>{ticket.title}</td>
+      <td>{ticket.price}</td>
+      <td>
+        <Link href='/tickets/[ticketId]' as={`/tickets/${ticket.id}`}>
+          <a className='nav-link'>View</a>
+        </Link>
+      </td>
+    </tr>
+  ));
+  return (
     <div>
-      <h1>Welcome user </h1>
-      <p className='my=0'>your email is: {currentUser.email}</p>
+      <h1>Tickets</h1>
+      <table className='table'>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>{ticketList}</tbody>
+      </table>
     </div>
-  ) : (
-    <h1>You are not signed in</h1>
   );
 };
 
-Landing.getInitialProps = async (context) => {
-  console.log('LANDING PAGE Intitial Props');
-  const axios = createAxios(context);
-  const { data } = await axios.get('/api/users/currentuser');
-  console.log('LANDING PAGE Intitial Props', { data });
-  return data;
+Landing.getInitialProps = async (context, axios) => {
+  const tickets = (await axios.get('/api/tickets')).data;
+  return {
+    tickets,
+  };
 };
 
 export default Landing;

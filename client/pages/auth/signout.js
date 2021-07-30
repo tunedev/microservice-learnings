@@ -7,7 +7,7 @@ const SignOut = () => {
   const { doRequest } = useRequest({
     url: '/api/users/signout',
     method: 'get',
-    data: {},
+    body: {},
     onSuccess: () => Router.push('/'),
   });
 
