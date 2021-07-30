@@ -26,7 +26,6 @@ const start = async () => {
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
-  console.log('Am i going to show 😄');
   console.log(`Auth service Listening on port: ${port}`);
 });
 
